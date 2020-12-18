@@ -9,7 +9,8 @@
   "author": "Anatoli Tserunyan",
   "license": "ISC",
   "dependencies": {
-    "gulp": "^4.0.2"
+    "gulp": "^4.0.2",
+    "slick-slider": "^1.8.2"
   },
   "devDependencies": {
     "browser-sync": "^2.26.13",
@@ -18,6 +19,8 @@
     "gulp-concat": "^2.6.1",
     "gulp-imagemin": "^7.1.0",
     "gulp-sass": "^4.1.0",
+    "gulp-uglify-es": "^2.0.0",
+    "mixitup": "^3.3.1",
     "normalize.css": "^8.0.1"
   }
 }

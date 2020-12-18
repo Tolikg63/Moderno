@@ -3,6 +3,7 @@ const { src, dest, watch, parallel, series } = require('gulp');
 const scss = require('gulp-sass');
 const concat = require('gulp-concat');
 const browserSync = require('browser-sync').create();
+const uglify = require('gulp-uglify-es').default;
 const autoprefixer = require('gulp-autoprefixer');
 const imagemin = require('gulp-imagemin');
 const del = require('del');
@@ -35,11 +36,18 @@ function images() {
       .pipe(dest('dist/images'))
 }
 
-function styles() {
+function scripts() {
    return src([
-      'app/scss/style.scss',
-      'node_modules/normalize.css/normalize.css'
+      'node_modules/mixitup/dist/mixitup.js',
+      'node_modules/slick-slider/slick/slick.js'
    ])
+      .pipe(concat('libs.min.js'))
+      .pipe(uglify())
+      .pipe(dest('app/js'))
+}
+
+function styles() {
+   return src('app/scss/style.scss')
       .pipe(scss({outputStyle: 'compressed'}))
       .pipe(concat('style.min.css'))
       .pipe(autoprefixer({
@@ -48,6 +56,16 @@ function styles() {
       }))
       .pipe(dest('app/css'))
       .pipe(browserSync.stream())
+}
+
+function libs() {
+   return src([
+      'node_modules/normalize.css/normalize.css',
+      'node_modules/slick-slider/slick/slick.css'
+   ])
+      .pipe(scss({outputStyle: 'compressed'}))
+      .pipe((concat('libs.min.css')))
+      .pipe(dest('app/css'))
 }
 
 function build() {
@@ -64,12 +82,13 @@ function watching() {
    watch(['app/*.html']).on('change', browserSync.reload)
 }
 
-
+exports.libs = libs;
 exports.styles = styles;
 exports.watching = watching;
 exports.browserSync = browsersync;
 exports.images = images;
 exports.cleanDist = cleanDist;
+exports.scripts = scripts;
 
 exports.build = series(cleanDist, images, build);
-exports.default = parallel(styles, browsersync, watching);
+exports.default = parallel(libs, styles, scripts, browsersync, watching);
