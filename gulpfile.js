@@ -38,12 +38,15 @@ function images() {
 
 function scripts() {
    return src([
-      'node_modules/mixitup/dist/mixitup.js',
-      'node_modules/slick-slider/slick/slick.js'
+      'node_modules/jquery/dist/jquery.js',
+      'node_modules/mixitup/dist/mixitup.js', 
+      'node_modules/slick-slider/slick/slick.js',
+      'node_modules/rateyo/lib/cjs/jquery.rateyo.js'
    ])
       .pipe(concat('libs.min.js'))
       .pipe(uglify())
       .pipe(dest('app/js'))
+      .pipe(browserSync.stream())
 }
 
 function styles() {
@@ -61,7 +64,8 @@ function styles() {
 function libs() {
    return src([
       'node_modules/normalize.css/normalize.css',
-      'node_modules/slick-slider/slick/slick.css'
+      'node_modules/slick-slider/slick/slick.css',
+      'node_modules/rateyo/lib/cjs/jquery.rateyo.css'
    ])
       .pipe(scss({outputStyle: 'compressed'}))
       .pipe((concat('libs.min.css')))
@@ -79,6 +83,7 @@ function build() {
 
 function watching() {
    watch(['app/scss/**/*.scss'], styles);
+   watch(['app/js/main.js'], scripts);
    watch(['app/*.html']).on('change', browserSync.reload)
 }
 
